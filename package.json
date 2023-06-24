@@ -6,7 +6,10 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@maxmind/geoip2-node": "^4.0.0",
+    "@prisma/client": "^4.16.1",
+    "elysia": "latest",
+    "prisma": "^4.16.1"
   },
   "devDependencies": {
     "bun-types": "latest"
