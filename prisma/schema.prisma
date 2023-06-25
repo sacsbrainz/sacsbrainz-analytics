@@ -9,8 +9,33 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+
+model Analytic {
+  id             String         @id @default(cuid())
+  country        String?
+  countryIsoCode String?
+  continent      String?
+  continentCode  String?
+  userAgent      String?
+  referrer       String?
+  timestamp      DateTime?
+  screenWidth    Float?
+  browser        String?
+  os             String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  AnalyticPage   AnalyticPage[]
+}
+
+model AnalyticPage {
+  id         String    @id @default(cuid())
+  page       String
+  rank       Int
+  timeSpent  Float
+  analyticId String?
+  analytic   Analytic? @relation(fields: [analyticId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([analyticId], name: "analyticId")
 }
