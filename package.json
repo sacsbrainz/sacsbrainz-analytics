@@ -6,13 +6,17 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/cors": "^0.5.2",
     "@maxmind/geoip2-node": "^4.0.0",
     "@prisma/client": "^4.16.1",
     "elysia": "latest",
-    "prisma": "^4.16.1"
+    "elysia-rate-limit": "^1.0.3",
+    "prisma": "^4.16.1",
+    "ua-parser-js": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "@types/ua-parser-js": "latest"
   },
   "module": "src/index.js"
 }
