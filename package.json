@@ -5,6 +5,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "dependencies": {
     "@elysiajs/cookie": "^0.5.2",
     "@elysiajs/cors": "^0.5.2",

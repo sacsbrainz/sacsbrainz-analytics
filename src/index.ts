@@ -10,8 +10,8 @@ import staticPlugin from "@elysiajs/static";
 
 const corsUrl =
   process.env.NODE_ENV === "production"
-    ? "https://sacsbrainz.com"
-    : "http://localhost:3000";
+    ? /^(?:https?:\/\/)?(?:\w+\.)?sacsbrainz\.com$/
+    : /localhost/;
 
 export const setup = (app: Elysia) =>
   app
@@ -34,9 +34,11 @@ const app = new Elysia()
     })
   )
   .use(setup)
-  .use(staticPlugin({
-    prefix: "/",
-  }))
+  .use(
+    staticPlugin({
+      prefix: "/",
+    })
+  )
   .use(auth)
   .use(home)
   .use(analytic)

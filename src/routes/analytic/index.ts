@@ -34,6 +34,9 @@ export const analytic = (app: Elysia) =>
               gte: new Date(query.from),
               lte: new Date(query.to),
             },
+            AND: {
+              websitesId: query.id,
+            },
           },
         });
         const pageViewsCount = await prisma.analyticPage.count({
@@ -42,11 +45,16 @@ export const analytic = (app: Elysia) =>
               gte: new Date(query.from),
               lte: new Date(query.to),
             },
+            AND: {
+              analytic: {
+                websitesId: query.id,
+              },
+            },
           },
         });
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched stats",
           data: {
             visitorsCount,
             pageViewsCount,
@@ -57,6 +65,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -79,6 +88,9 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: fromDate,
               lte: toDate,
+            },
+            AND: {
+              websitesId: query.id,
             },
           },
           select: {
@@ -110,6 +122,11 @@ export const analytic = (app: Elysia) =>
               gte: fromDate,
               lte: toDate,
             },
+            AND: {
+              analytic: {
+                websitesId: query.id,
+              },
+            },
           },
           select: {
             createdAt: true,
@@ -136,11 +153,9 @@ export const analytic = (app: Elysia) =>
           currentDatePageViews.setDate(currentDatePageViews.getDate() + 1);
         }
 
-        await prisma.$disconnect();
-
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched timeseries",
           data: {
             visitors: visitorsCounts,
             pageViews: pageViewsCounts,
@@ -151,6 +166,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -176,6 +192,11 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: startDate,
               lte: endDate,
+            },
+            AND: {
+              analytic: {
+                websitesId: query.id,
+              },
             },
           },
           orderBy: {
@@ -212,7 +233,7 @@ export const analytic = (app: Elysia) =>
 
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched top pages",
           data: filteredData,
         };
       },
@@ -220,6 +241,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -242,6 +264,9 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: startDate,
               lte: endDate,
+            },
+            AND: {
+              websitesId: query.id,
             },
           },
           orderBy: {
@@ -278,7 +303,7 @@ export const analytic = (app: Elysia) =>
 
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched top referrers",
           data: filteredData,
         };
       },
@@ -286,72 +311,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
-        }),
-      }
-    )
-    .get(
-      "/top-referrers",
-      async ({ user, query }) => {
-        if (!user) {
-          return {
-            success: false,
-            message: "Unauthorized",
-            data: null,
-          };
-        }
-
-        const startDate = new Date(query.from);
-        const endDate = new Date(query.to);
-
-        const filteredPrismaData = await prisma.analytic.findMany({
-          where: {
-            createdAt: {
-              gte: startDate,
-              lte: endDate,
-            },
-          },
-          orderBy: {
-            referrer: "asc",
-          },
-          select: {
-            referrer: true,
-          },
-        });
-
-        const getPageCountArray = (
-          data: { referrer: string }[]
-        ): { referrer: string; count: number }[] => {
-          const CountMap: { [referrer: string]: number } = {};
-
-          data.forEach((item) => {
-            const { referrer } = item;
-            if (CountMap[referrer]) {
-              CountMap[referrer]++;
-            } else {
-              CountMap[referrer] = 1;
-            }
-          });
-
-          const result: { referrer: string; count: number }[] = [];
-          for (const referrer in CountMap) {
-            result.push({ referrer, count: CountMap[referrer] });
-          }
-
-          return result.sort((a, b) => b.count - a.count);
-        };
-
-        const filteredData = getPageCountArray(filteredPrismaData);
-
-        return {
-          success: true,
-          message: "Fetch authenticated user details",
-          data: filteredData,
-        };
-      },
-      {
-        query: t.Object({
-          from: t.String(),
-          to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -374,6 +334,9 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: startDate,
               lte: endDate,
+            },
+            AND: {
+              websitesId: query.id,
             },
           },
           orderBy: {
@@ -410,7 +373,7 @@ export const analytic = (app: Elysia) =>
 
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched countries",
           data: filteredData,
         };
       },
@@ -418,6 +381,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -440,6 +404,9 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: startDate,
               lte: endDate,
+            },
+            AND: {
+              websitesId: query.id,
             },
           },
           orderBy: {
@@ -476,7 +443,7 @@ export const analytic = (app: Elysia) =>
 
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched os",
           data: filteredData,
         };
       },
@@ -484,6 +451,7 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
         }),
       }
     )
@@ -506,6 +474,9 @@ export const analytic = (app: Elysia) =>
             createdAt: {
               gte: startDate,
               lte: endDate,
+            },
+            AND: {
+              websitesId: query.id,
             },
           },
           orderBy: {
@@ -542,7 +513,7 @@ export const analytic = (app: Elysia) =>
 
         return {
           success: true,
-          message: "Fetch authenticated user details",
+          message: "Fetched browser",
           data: filteredData,
         };
       },
@@ -550,6 +521,110 @@ export const analytic = (app: Elysia) =>
         query: t.Object({
           from: t.String(),
           to: t.String(),
+          id: t.String(),
+        }),
+      }
+    )
+    .post(
+      "/add-website",
+      async ({ body, set, request, user }) => {
+        if (!user) {
+          return {
+            success: false,
+            message: "Unauthorized",
+            data: null,
+          };
+        }
+
+        const secret = request.headers.get("x-secret");
+        if (secret !== Bun.env.SECRET) {
+          set.status = 401;
+          return {
+            success: false,
+            data: null,
+            message: "Unauthorized",
+          };
+        }
+        const { url } = body;
+
+        const newWebsite = await prisma.websites.create({
+          data: {
+            url,
+          },
+        });
+
+        await prisma.logs.create({
+          data: {
+            userId: user.id,
+            action: "CREATED_NEW_WEBSITE",
+          },
+        });
+
+        return {
+          success: true,
+          message: "Website created",
+          data: {
+            website: newWebsite,
+          },
+        };
+      },
+      {
+        body: t.Object({
+          url: t.String(),
+        }),
+      }
+    )
+    .get("/get-websites", async ({ user }) => {
+      if (!user) {
+        return {
+          success: false,
+          message: "Unauthorized",
+          data: null,
+        };
+      }
+
+      const websites = await prisma.websites.findMany({
+        include: {
+          _count: {
+            select: {
+              analytic: true,
+            },
+          },
+        },
+      });
+
+      return {
+        success: true,
+        message: "Fetched websites",
+        data: {
+          websites,
+        },
+      };
+    })
+    .get(
+      "/get-website/:id",
+      async ({ user, params: { id } }) => {
+        if (!user) {
+          return {
+            success: false,
+            message: "Unauthorized",
+            data: null,
+          };
+        }
+
+        const website = await prisma.websites.findUnique({
+          where: { id },
+        });
+
+        return {
+          success: true,
+          message: "Fetched websites",
+          data: website,
+        };
+      },
+      {
+        params: t.Object({
+          id: t.String(),
         }),
       }
     );

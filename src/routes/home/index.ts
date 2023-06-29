@@ -18,6 +18,7 @@ export const home = (app: Elysia) =>
             set.status = 400;
             throw new Error("Something went wrong");
           }
+
           const country = await extractCountry(ip, geo);
           const countryIsoCode = await extractCountryIsoCode(ip, geo);
           if (!geo.country(ip)) {
@@ -25,6 +26,16 @@ export const home = (app: Elysia) =>
           }
           const ua = parser(request.headers.get("user-agent") ?? "Unknown");
 
+          const checkWebsiteId = await prisma.websites.findUnique({
+            where: {
+              id: body.a,
+            },
+          });
+
+          if (!checkWebsiteId) {
+            set.status = 401;
+            return "Unauthorized";
+          }
           await prisma.$transaction(async (tx) => {
             const createAnalytic = await tx.analytic.create({
               data: {
@@ -42,6 +53,7 @@ export const home = (app: Elysia) =>
                 timestamp: new Date(body.d),
                 referrer: body.r ?? request.headers.get("referer") ?? "Unknown",
                 browser: ua.browser.name ?? "Unknown",
+                websitesId: checkWebsiteId.id,
               },
             });
 
@@ -74,6 +86,7 @@ export const home = (app: Elysia) =>
           r: t.Any(),
           w: t.Number(),
           p: t.Record(t.String(), t.Array(t.Number(), t.Number())),
+          a: t.String(),
         }),
       }
     );
