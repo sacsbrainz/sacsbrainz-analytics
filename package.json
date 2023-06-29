@@ -6,7 +6,9 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/cookie": "^0.5.2",
     "@elysiajs/cors": "^0.5.2",
+    "@elysiajs/jwt": "^0.5.3",
     "@maxmind/geoip2-node": "^4.0.0",
     "@prisma/client": "^4.16.1",
     "elysia": "latest",
