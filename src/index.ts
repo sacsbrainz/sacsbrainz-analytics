@@ -25,7 +25,11 @@ export const setup = (app: Elysia) =>
     .use(cookie());
 
 const app = new Elysia()
-  .use(rateLimit())
+  .use(
+    rateLimit({
+      max: 60,
+    })
+  )
   .use(
     cors({
       origin: corsUrl,

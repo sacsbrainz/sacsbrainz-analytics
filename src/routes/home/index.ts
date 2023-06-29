@@ -12,8 +12,10 @@ export const home = (app: Elysia) =>
       async ({ request, body, set }) => {
         try {
           const geo = await Reader.open("country.mmdb", {});
-          // const ip = "149.102.229.225";
-          const ip = request.headers.get("x-forwarded-for");
+          const ip =
+            Bun.env.NODE_ENV === "production"
+              ? request.headers.get("x-forwarded-for")
+              : "149.102.229.225";
           if (!ip) {
             set.status = 400;
             throw new Error("Something went wrong");
