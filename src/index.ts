@@ -6,6 +6,7 @@ import { home } from "./routes/home";
 import { rateLimit } from "elysia-rate-limit";
 import cors from "@elysiajs/cors";
 import { analytic } from "./routes/analytic";
+import staticPlugin from "@elysiajs/static";
 
 const corsUrl =
   process.env.NODE_ENV === "production"
@@ -33,6 +34,9 @@ const app = new Elysia()
     })
   )
   .use(setup)
+  .use(staticPlugin({
+    prefix: "/",
+  }))
   .use(auth)
   .use(home)
   .use(analytic)
