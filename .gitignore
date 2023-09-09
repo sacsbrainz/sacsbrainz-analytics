@@ -44,3 +44,14 @@ package-lock.json
 
 #ssh
 ssh*
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
+
