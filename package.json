@@ -16,10 +16,10 @@
     "@prisma/client": "^5.2.0",
     "elysia": "latest",
     "elysia-rate-limit": "^1.0.3",
-    "prisma": "^5.2.0",
     "ua-parser-js": "latest"
   },
   "devDependencies": {
+    "prisma": "^5.2.0",
     "bun-types": "latest",
     "@types/ua-parser-js": "latest"
   },
