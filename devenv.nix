@@ -8,7 +8,7 @@
   dotenv.enable = true;
   dotenv.filename = ".env";
 
-  packages = [ pkgs.bun ];
+  packages = [ pkgs.bun pkgs.openssl ];
 
   services = {
     # enable mailpit email
@@ -45,8 +45,14 @@
       export PRISMA_FMT_BINARY="${pkgs.prisma-engines}/bin/prisma-fmt"
   '';
 
+  # https://devenv.sh/languages/
+  languages.javascript = {
+    enable = true;
+    package = pkgs.nodejs-18_x;
+  };
+
   # Start the frontend server
+  # processes.start-prisma-gen.exec = "bunx prisma generate";
   processes.start-frontend.exec = "bun run start";
 
-  # See full reference at https://devenv.sh/reference/options/
 }
