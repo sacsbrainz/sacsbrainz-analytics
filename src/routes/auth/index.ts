@@ -150,7 +150,8 @@ export const auth = (app: Elysia) =>
           setCookie("access_token", accessToken, {
             maxAge: 15 * 60, // 15 minutes
             path: "/",
-            sameSite: "strict",
+            domain: Bun.env.NODE_ENV === "production" ? "sacsbrainz.com" : "",
+            sameSite: "none",
             secure: Bun.env.NODE_ENV === "production",
             httpOnly: true,
           });
