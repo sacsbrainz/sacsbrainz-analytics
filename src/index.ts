@@ -22,7 +22,10 @@ export const setup = (app: Elysia) =>
         exp: "15m",
       })
     )
-    .use(cookie());
+    .use(cookie({
+      sameSite: "none",
+      secure: true,
+    }));
 
 const app = new Elysia()
   .use(
