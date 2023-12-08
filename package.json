@@ -12,7 +12,7 @@
     "@elysiajs/cors": "^0.6.0",
     "@elysiajs/jwt": "^0.6.3",
     "@elysiajs/static": "^0.6.0",
-    "@maxmind/geoip2-node": "^4.2.0",
+    "@maxmind/geoip2-node": "^5.0.0",
     "@prisma/client": "^5.2.0",
     "elysia": "latest",
     "elysia-rate-limit": "^1.0.3",
