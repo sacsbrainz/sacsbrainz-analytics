@@ -12,20 +12,24 @@ export const home = (app: Elysia) =>
       async ({ request, body, set }) => {
         try {
           const geo = await Reader.open("country.mmdb", {});
-          const ip =
-            Bun.env.NODE_ENV === "production"
-              ? request.headers.get("x-forwarded-for")
-              : "149.102.229.225";
+          let ip = request.headers.get("x-forwarded-for") || "149.102.229.225";
           if (!ip) {
             set.status = 400;
-            throw new Error("Something went wrong");
+            return "Something went wrong";
+          }
+
+          // handle edge cases where ip is an array or has a comma
+          if (Array.isArray(ip)) {
+            ip = ip[0] as string;
+          }
+
+          if (ip?.includes(",")) {
+            ip = ip.split(",")[0] as string;
           }
 
           const country = await extractCountry(ip, geo);
           const countryIsoCode = await extractCountryIsoCode(ip, geo);
-          if (!geo.country(ip)) {
-            throw new Error("Something went wrong");
-          }
+
           const ua = parser(request.headers.get("user-agent") ?? "Unknown");
 
           const checkWebsiteId = await prisma.websites.findUnique({
@@ -77,7 +81,7 @@ export const home = (app: Elysia) =>
         } catch (error) {
           console.log(error);
           set.status = 500;
-          throw new Error("Something went wrong");
+          return "Something went wrong";
         }
         set.status = 200;
         return "success";
