@@ -3,16 +3,15 @@ FROM oven/bun:latest
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-COPY bun.lockb ./
+# Copy the rest of the application code
+COPY . .
 
 # Install project dependencies
 RUN bun install
 
-# Copy the rest of the application code
-COPY . .
+# Generate Prisma client
+RUN bun x prisma generate
+
 
 # Expose the port on which the Node.js application will run
 EXPOSE 2020
