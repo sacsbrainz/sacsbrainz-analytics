@@ -7,9 +7,4 @@ services:
     ports:
       - "2020:2020"
     restart: always
-    networks:
-      - analytics-network
-
-networks:
-  analytics-network:
-    driver: bridge
+    network_mode: "host"
